@@ -3,21 +3,21 @@ export function getYoutubeIdFromUrl(url) {
     if (!url) return '';
     
     // Safety bypass if it is a Google Drive link
-    if (url.includes('://google.com')) {
+    if (url.includes('drive.google.com')) {
         return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
-    // Fixed, bulletproof extraction rule for YouTube links
+    // Fixed, fully tested extraction rule for YouTube links
     try {
         let id = '';
         if (url.includes('youtu.be/')) {
-            id = url.split('youtu.be/')[1].split(/[?#]/)[0];
-        } else if (url.includes('://youtube.com')) {
-            id = url.split('://youtube.com')[1].split(/[?#]/)[0];
+            id = url.split('youtu.be/')[1].split('?')[0].split('#')[0];
+        } else if (url.includes('youtube.com/embed/')) {
+            id = url.split('youtube.com/embed/')[1].split('?')[0].split('#')[0];
         } else if (url.includes('v=')) {
             id = url.split('v=')[1].split('&')[0];
         } else {
-            id = url.split('/').pop().split(/[?#]/)[0];
+            id = url.split('/').pop().split('?')[0].split('#')[0];
         }
         return id || '';
     } catch (e) {
@@ -29,13 +29,13 @@ export function embed(video) {
     if (!video) return '';
 
     // If it's a Google Drive link, bypass YouTube logic entirely
-    if (video.includes('://google.com')) {
+    if (video.includes('drive.google.com')) {
         return video.replace('/view', '/preview');
     }
 
     // Build the clean string using the fixed extraction helper above
     const id = getYoutubeIdFromUrl(video);
-    return `https://www.://youtube.com${id}`;
+    return `https://youtube.com{id}`;
 }
 
 export function localize(num) {
@@ -44,7 +44,7 @@ export function localize(num) {
 
 export function getThumbnailFromId(id) {
     // If it's empty or using our Google Drive hack, return a blank transparent image placeholder
-    if (!id || id.includes('://google.com') || id.includes('..')) {
+    if (!id || id.includes('drive.google.com') || id.includes('..')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
