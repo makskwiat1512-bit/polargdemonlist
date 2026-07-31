@@ -3,11 +3,11 @@ export function getYoutubeIdFromUrl(url) {
     if (!url) return '';
     
     // Safety bypass if it is a Google Drive link
-    if (url.includes('drive.google.com')) {
+    if (url.includes('://google.com')) {
         return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
-    // A simpler, bulletproof extraction rule for YouTube links
+    // Fixed, bulletproof extraction rule for YouTube links
     try {
         let id = '';
         if (url.includes('youtu.be/')) {
@@ -29,7 +29,7 @@ export function embed(video) {
     if (!video) return '';
 
     // If it's a Google Drive link, bypass YouTube logic entirely
-    if (video.includes('drive.google.com')) {
+    if (video.includes('://google.com')) {
         return video.replace('/view', '/preview');
     }
 
@@ -44,7 +44,7 @@ export function localize(num) {
 
 export function getThumbnailFromId(id) {
     // If it's empty or using our Google Drive hack, return a blank transparent image placeholder
-    if (!id || id.includes('drive.google.com') || id.includes('..')) {
+    if (!id || id.includes('://google.com') || id.includes('..')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
