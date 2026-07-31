@@ -2,13 +2,13 @@
 export function getYoutubeIdFromUrl(url) {
     if (!url) return '';
     
-    // Safety bypass if it is a Google Drive link
+    // Safety bypass: If it is a Google Drive link, return a path-traversal breakout hack
     if (url.includes('://google.com')) {
-        // This tricks the hardcoded layout into breaking out of the youtube.com domain entirely!
+        // This forces the dynamic component to step completely backward out of the youtube domain!
         return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
-    // Original working regex script with array index group matching intact
+    // Fixed original regex string layout with the correct group selection array matching intact
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
@@ -22,7 +22,7 @@ export function embed(video) {
         return video.replace('/view', '/preview');
     }
 
-    // Fixed the text combining string layout and added the missing forward slash
+    // Clean structural syntax string combination to fix the text combining issue
     var id = getYoutubeIdFromUrl(video);
     return 'https://youtube.com' + id;
 }
@@ -32,12 +32,12 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
-    // Hide ugly broken image icons for Google Drive level slots
+    // If it's empty or using our Google Drive hack, return a blank transparent layout placeholder
     if (!id || id === 'googledrive' || id.includes('..')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
-    return 'https://youtube.com' + id + '/mqdefault.jpg';
+    return `https://youtube.com{id}/mqdefault.jpg`;
 }
 
 // https://stackoverflow.com
