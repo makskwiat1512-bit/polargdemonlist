@@ -2,40 +2,28 @@
 export function getYoutubeIdFromUrl(url) {
     if (!url) return '';
     
-    // Safety bypass if it is a Google Drive link
+    // Safety bypass: If it is a Google Drive link, don't run the YouTube regex
     if (url.includes('://google.com')) {
-        return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
+        return 'googledrive';
     }
 
-    // Extraction rule for YouTube links
-    try {
-        let id = '';
-        if (url.includes('youtu.be/')) {
-            id = url.split('youtu.be/')[1].split('?')[0].split('#')[0];
-        } else if (url.includes('://youtube.com')) {
-            id = url.split('://youtube.com')[1].split('?')[0].split('#')[0];
-        } else if (url.includes('v=')) {
-            id = url.split('v=')[1].split('&')[0];
-        } else {
-            id = url.split('/').pop().split('?')[0].split('#')[0];
-        }
-        return id || '';
-    } catch (e) {
-        return '';
-    }
+    // This is your original, perfectly working YouTube regex
+    return url.match(
+        /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
+    )?.[1] ?? '';
 }
 
 export function embed(video) {
     if (!video) return '';
 
-    // If it's a Google Drive link, bypass YouTube logic entirely
+    // If it's a Google Drive link, completely bypass the YouTube embed URL rule
     if (video.includes('://google.com')) {
         return video.replace('/view', '/preview');
     }
 
-    // Corrected the template literal layout with the required $ sign
+    // Default template logic for YouTube videos using a clean variable lookup
     const id = getYoutubeIdFromUrl(video);
-    return `https://www.://youtube.com${id}`;
+    return `https://youtube.com{id}`;
 }
 
 export function localize(num) {
@@ -43,8 +31,8 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
-    // If it's empty or using our Google Drive hack, return a blank transparent image placeholder
-    if (!id || id.includes('://google.com') || id.includes('..')) {
+    // If it's a Google Drive link, return a blank transparent image placeholder
+    if (!id || id === 'googledrive') {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
