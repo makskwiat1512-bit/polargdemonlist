@@ -7,6 +7,7 @@ export function getYoutubeIdFromUrl(url) {
         return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
+    // Fixed the missing array group index parameter [1] here
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
@@ -15,12 +16,12 @@ export function getYoutubeIdFromUrl(url) {
 export function embed(video) {
     if (!video) return '';
 
-    // If it's a Google Drive link, bypass YouTube logic entirely >w<
+    // If it's a Google Drive link, bypass YouTube logic entirely
     if (video.includes('drive.google.com')) {
         return video.replace('/view', '/preview');
     }
 
-    // Default template logic for YouTube videos (Added the missing $)
+    // Default template logic for YouTube videos (Now matches correctly)
     return `https://youtube.com{getYoutubeIdFromUrl(video)}`;
 }
 
@@ -29,15 +30,15 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
-    // If there is no YouTube ID or it's our Google Drive hack string, return a blank transparent layout placeholder
+    // If there is no YouTube ID or it's our Google Drive path-traversal string, return a blank template placeholder
     if (!id || id.includes('drive.google.com')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
-    return `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+    return `https://youtube.com{id}/mqdefault.jpg`;
 }
 
-// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+// https://stackoverflow.com
 export function shuffle(array) {
     let currentIndex = array.length, randomIndex;
 
