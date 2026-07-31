@@ -1,5 +1,12 @@
-// https://stackoverflow.com/questions/3452546/how-do-i-get-the-youtube-video-id-from-a-url
+// https://stackoverflow.com
 export function getYoutubeIdFromUrl(url) {
+    if (!url) return '';
+    
+    // If it's a Google Drive link, return a special tag instead of breaking
+    if (url.includes('://google.com')) {
+        return 'googledrive';
+    }
+
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
@@ -8,12 +15,13 @@ export function getYoutubeIdFromUrl(url) {
 export function embed(video) {
     if (!video) return '';
 
-    // If it's a Google Drive link, bypass YouTube logic and use embed preview layout
+    // If it's a Google Drive link, bypass YouTube logic entirely >w<
     if (video.includes('://google.com')) {
         return video.replace('/view', '/preview');
     }
 
-    return `https://www.youtube.com/embed/${getYoutubeIdFromUrl(video)}`;
+    // Default template logic for YouTube videos
+    return `https://youtube.com{getYoutubeIdFromUrl(video)}`;
 }
 
 export function localize(num) {
