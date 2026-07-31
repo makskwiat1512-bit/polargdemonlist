@@ -6,6 +6,13 @@ export function getYoutubeIdFromUrl(url) {
 }
 
 export function embed(video) {
+    if (!video) return '';
+
+    // If it's a Google Drive link, bypass YouTube logic and use embed preview layout
+    if (video.includes('://google.com')) {
+        return video.replace('/view', '/preview');
+    }
+
     return `https://www.youtube.com/embed/${getYoutubeIdFromUrl(video)}`;
 }
 
@@ -14,6 +21,9 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
+    // If there is no YouTube ID (like when using Google Drive), return a blank transparent image layout placeholder
+    if (!id) return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    
     return `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
 }
 
