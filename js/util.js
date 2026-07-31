@@ -2,15 +2,27 @@
 export function getYoutubeIdFromUrl(url) {
     if (!url) return '';
     
-    // If it's a Google Drive link, return a special hack to escape the YouTube domain template
+    // Safety bypass if it is a Google Drive link
     if (url.includes('drive.google.com')) {
         return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
-    // Fixed the missing array group index parameter [1] here
-    return url.match(
-        /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
-    )?.[1] ?? '';
+    // A simpler, bulletproof extraction rule for YouTube links
+    try {
+        let id = '';
+        if (url.includes('youtu.be/')) {
+            id = url.split('youtu.be/')[1].split(/[?#]/)[0];
+        } else if (url.includes('://youtube.com')) {
+            id = url.split('://youtube.com')[1].split(/[?#]/)[0];
+        } else if (url.includes('v=')) {
+            id = url.split('v=')[1].split('&')[0];
+        } else {
+            id = url.split('/').pop().split(/[?#]/)[0];
+        }
+        return id || '';
+    } catch (e) {
+        return '';
+    }
 }
 
 export function embed(video) {
@@ -21,8 +33,9 @@ export function embed(video) {
         return video.replace('/view', '/preview');
     }
 
-    // Default template logic for YouTube videos (Now matches correctly)
-    return `https://youtube.com{getYoutubeIdFromUrl(video)}`;
+    // Build the clean string using the fixed extraction helper above
+    const id = getYoutubeIdFromUrl(video);
+    return `https://www.://youtube.com${id}`;
 }
 
 export function localize(num) {
@@ -30,8 +43,8 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
-    // If there is no YouTube ID or it's our Google Drive path-traversal string, return a blank template placeholder
-    if (!id || id.includes('drive.google.com')) {
+    // If it's empty or using our Google Drive hack, return a blank transparent image placeholder
+    if (!id || id.includes('drive.google.com') || id.includes('..')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
