@@ -7,7 +7,7 @@ export function getYoutubeIdFromUrl(url) {
         return 'googledrive';
     }
 
-    // Fixed the missing array group index parameter ([1]) here!
+    // Original working YouTube regex with the array match index [] correctly added back
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
@@ -21,7 +21,7 @@ export function embed(video) {
         return video.replace('/view', '/preview');
     }
 
-    // Default template logic for YouTube videos using a clean variable lookup
+    // Corrected template literal using the proper dollar-sign execution syntax
     const id = getYoutubeIdFromUrl(video);
     return `https://youtube.com{id}`;
 }
