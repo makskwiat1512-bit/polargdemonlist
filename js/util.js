@@ -7,7 +7,7 @@ export function getYoutubeIdFromUrl(url) {
         return 'googledrive';
     }
 
-    // Restored the exact, original regex pattern with the correct [1] group selection array matching
+    // Original working regex script with array index group matching intact
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
@@ -21,8 +21,9 @@ export function embed(video) {
         return video.replace('/view', '/preview');
     }
 
-    // Default template logic for YouTube videos (Restored original syntax matching)
-    return `https://youtube.com{getYoutubeIdFromUrl(video)}`;
+    // Swapped out the glitchy template literal for a basic, bulletproof string combination
+    var id = getYoutubeIdFromUrl(video);
+    return 'https://youtube.com' + id;
 }
 
 export function localize(num) {
@@ -35,7 +36,7 @@ export function getThumbnailFromId(id) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
-    return `https://youtube.com{id}/mqdefault.jpg`;
+    return 'https://youtube.com' + id + '/mqdefault.jpg';
 }
 
 // https://stackoverflow.com
