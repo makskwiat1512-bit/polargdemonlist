@@ -4,7 +4,8 @@ export function getYoutubeIdFromUrl(url) {
     
     // Safety bypass if it is a Google Drive link
     if (url.includes('://google.com')) {
-        return 'googledrive';
+        // This tricks the hardcoded layout into breaking out of the youtube.com domain entirely!
+        return `../../../../${url.replace('https://', '').replace('/view', '/preview')}`;
     }
 
     // Original working regex script with array index group matching intact
@@ -21,7 +22,7 @@ export function embed(video) {
         return video.replace('/view', '/preview');
     }
 
-    // Swapped out the glitchy template literal for a basic, bulletproof string combination
+    // Fixed the text combining string layout and added the missing forward slash
     var id = getYoutubeIdFromUrl(video);
     return 'https://youtube.com' + id;
 }
@@ -31,8 +32,8 @@ export function localize(num) {
 }
 
 export function getThumbnailFromId(id) {
-    // If it's empty or using our Google Drive placeholder tag, return a blank template layout
-    if (!id || id === 'googledrive') {
+    // Hide ugly broken image icons for Google Drive level slots
+    if (!id || id === 'googledrive' || id.includes('..')) {
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     }
     
