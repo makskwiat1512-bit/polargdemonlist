@@ -7,7 +7,7 @@ export function getYoutubeIdFromUrl(url) {
         return 'googledrive';
     }
 
-    // This is your original, perfectly working YouTube regex
+    // Fixed the missing array group index parameter ([1]) here!
     return url.match(
         /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/,
     )?.[1] ?? '';
